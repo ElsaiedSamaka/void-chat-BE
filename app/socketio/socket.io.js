@@ -11,20 +11,22 @@ function setupSocket(server) {
   });
 
   io.on("connection", (socket) => {
-    console.log( `Socket.IO client ${ socket.id } connected` );
-    // get current user 
+    console.log(`Socket.IO client ${socket.id} connected`);
+    // get current user
     getConnectedUser(socket);
+    // get messages
     socket.on("getMessages", () => {
       getMessages(socket, io).catch((error) => {
         console.error(`Error getting messages: ${error}`);
       });
     });
-    socket.on( "sendMessage", (data) => {
-      sendMessage(socket, io ,data).catch((error) => {
+    // send message
+    socket.on("sendMessage", (data) => {
+      sendMessage(socket, io, data).catch((error) => {
         console.error(`Error sending message: ${error}`);
       });
     });
-  
+    // handle disconnecting
     socket.on("disconnect", () => {
       console.log(`Socket.IO client ${socket.id} disconnected`);
     });
