@@ -14,7 +14,11 @@ const sendMessage = async (socket, io, data) => {
     include: { all: true },
   });
   // find the socketId of the user on recipientId and this will be our to()
-  io.to().emit("newMessage", newMessage);
+  const recipient = await User.findByPk(message.recipientId);
+  // find the socketId of the user on recipientId and this will be our to()
+  const sender = await User.findByPk(message.senderId);
+  io.to(recipient.socketId).emit("newMessage", newMessage);
+  io.to(sender.socketId).emit("newMessage", newMessage);
   // in client we can handle whatever we want with newMessage event
 };
 
