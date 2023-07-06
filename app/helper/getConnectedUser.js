@@ -21,6 +21,7 @@ try {
 
   user.socketId = socket.id;
   await user.save();
+  return socket.id;
 } catch (error) {
   console.error("Error in getConnectedUser:", error);
   // Handle the error accordingly (e.g. emit an error event to the client)
