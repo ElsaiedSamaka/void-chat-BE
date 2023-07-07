@@ -15,7 +15,10 @@ const signup = async (req, res) => {
     });
     const token = createToken(user.id);
     middleware.userLogin.trackUserLogin(user.id);
-    res.cookie("token", token, { maxAge: 172800, httpOnly: false });
+    res.cookie("token", token, {
+      maxAge: 172800,
+      httpOnly: false,
+    });
     res.status(201).json(user);
   } catch (error) {
     res.status(500).send({ message: error.message });
@@ -28,7 +31,7 @@ const signin = async (req, res) => {
     const existing_user = await User.findOne({
       where: {
         email: req.body.email,
-      }
+      },
     });
     if (!existing_user) {
       return res.status(401).json({ message: "User Not found." });
@@ -45,7 +48,10 @@ const signin = async (req, res) => {
     }
 
     const token = createToken(existing_user.id);
-    res.cookie("token", token, { maxAge: 172800, httpOnly: false });
+    res.cookie("token", token, {
+      maxAge: 172800,
+      httpOnly: false,
+    });
     middleware.userLogin.trackUserLogin(existing_user.id);
     res.status(200).json(existing_user);
   } catch (error) {

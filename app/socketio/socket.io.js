@@ -15,8 +15,8 @@ function setupSocket(server) {
     // get current user
     getConnectedUser(socket);
     // get messages
-    socket.on("getMessages", () => {
-      getMessages(socket, io).catch((error) => {
+    socket.on("getMessages", (payload) => {
+      getMessages(socket, io, payload).catch((error) => {
         console.error(`Error getting messages: ${error}`);
       });
     });
