@@ -2,6 +2,7 @@ const Message = require("../models").message;
 const getMessages = async (socket, io, payload) => {
   console.log("getMessages called !!!!!!!!!!!");
   const { sender, recipient } = payload;
+  console.log("sender", sender, "recipient", recipient);
   const messages = await Message.findAll({
     where: {
       senderId: sender,
@@ -11,6 +12,6 @@ const getMessages = async (socket, io, payload) => {
       all: true,
     },
   });
-  io.emit("messages", messages);
+  io.to(socket.id).emit("messages", messages);
 };
 module.exports = getMessages;
