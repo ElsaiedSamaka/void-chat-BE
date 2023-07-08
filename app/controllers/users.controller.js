@@ -20,10 +20,8 @@ const getUsers = async (req, res) => {
     });
   }
 };
-
-// Get List of contacted Users
 const getContactedUsers = async (req, res) => {
-  const id = req.userId; // get current user ID from request object
+  const id = req.userId;
   try {
     const messages = await Message.findAll({
       where: {
@@ -45,11 +43,15 @@ const getContactedUsers = async (req, res) => {
 
     messages.forEach((message) => {
       const recipientId = message.recipient.id;
-      if (!uniqueRecipients.includes(recipientId)) {
+      const senderId = message.sender.id;
+      if (recipientId !== id && !uniqueRecipients.includes(recipientId)) {
         uniqueRecipients.push(recipientId);
       }
+      if (senderId !== id && !uniqueRecipients.includes(senderId)) {
+        uniqueRecipients.push(senderId);
+      }
     });
-    // Retrieve the unique user objects from the database
+
     const uniqueUsers = await User.findAll({
       where: {
         id: uniqueRecipients,
