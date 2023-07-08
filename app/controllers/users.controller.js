@@ -37,6 +37,7 @@ const getContactedUsers = async (req, res) => {
           as: "recipient",
         },
       ],
+      order: [["createdAt", "DESC"]],
     });
 
     const uniqueRecipients = new Array();
