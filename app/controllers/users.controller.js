@@ -40,18 +40,27 @@ const getContactedUsers = async (req, res) => {
         },
       ],
     });
-    const recipients = messages.map((message) => {
-      if (message.sender.id === id) {
-        return message.recipient;
-      } else {
-        return message.sender;
+
+    const uniqueRecipients = new Array();
+
+    messages.forEach((message) => {
+      const recipientId = message.recipient.id;
+      if (!uniqueRecipients.includes(recipientId)) {
+        uniqueRecipients.push(recipientId);
       }
     });
-    const uniqueRecipients = [...new Set(recipients)]; // get unique recipients
-    if (!uniqueRecipients || uniqueRecipients.length === 0) {
+    // Retrieve the unique user objects from the database
+    const uniqueUsers = await User.findAll({
+      where: {
+        id: uniqueRecipients,
+      },
+    });
+
+    if (uniqueUsers.length === 0) {
       return res.status(404).json({ message: "No users found" });
     }
-    res.status(200).json(uniqueRecipients);
+
+    res.status(200).json(uniqueUsers);
   } catch (err) {
     res.status(500).json({
       message: err.message || "Some error occurred while retrieving users.",
