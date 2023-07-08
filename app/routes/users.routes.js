@@ -6,6 +6,13 @@ const { checkUser, rolesMiddleware } = require("../middleware");
 // Get List of Users
 router.get("/", usersController.getUsers);
 
+// Get List of contacted Users
+router.get(
+  "/contactedusers",
+  [checkUser.getCurrentUser],
+  usersController.getContactedUsers
+);
+
 // Get Current user
 router.get(
   "/current-user",

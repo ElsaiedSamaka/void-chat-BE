@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const Role = require("../models").role;
 const User = require("../models").user;
+const Message = require("../models").message;
 
 // Get List of Users
 const getUsers = async (req, res) => {
@@ -20,11 +21,49 @@ const getUsers = async (req, res) => {
   }
 };
 
-// Get current user 
+// Get List of contacted Users
+const getContactedUsers = async (req, res) => {
+  const id = req.userId; // get current user ID from request object
+  try {
+    const messages = await Message.findAll({
+      where: {
+        [Op.or]: [{ senderId: id }, { recipientId: id }],
+      },
+      include: [
+        {
+          model: User,
+          as: "sender",
+        },
+        {
+          model: User,
+          as: "recipient",
+        },
+      ],
+    });
+    const recipients = messages.map((message) => {
+      if (message.sender.id === id) {
+        return message.recipient;
+      } else {
+        return message.sender;
+      }
+    });
+    const uniqueRecipients = [...new Set(recipients)]; // get unique recipients
+    if (!uniqueRecipients || uniqueRecipients.length === 0) {
+      return res.status(404).json({ message: "No users found" });
+    }
+    res.status(200).json(uniqueRecipients);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message || "Some error occurred while retrieving users.",
+    });
+  }
+};
+// Get current user
 const getCurrentUser = async (req, res) => {
   try {
     const user = await User.findByPk(req.userId);
-    if (!user) return res.status(404).json({ message: "No user found but why " });
+    if (!user)
+      return res.status(404).json({ message: "No user found but why " });
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({
@@ -37,7 +76,10 @@ const getCurrentUser = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id, { include: Role });
-    if (!user) return res.status(404).json({ message: "No user found [users controller] " });
+    if (!user)
+      return res
+        .status(404)
+        .json({ message: "No user found [users controller] " });
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({
@@ -100,7 +142,10 @@ const getUsersByRole = async (req, res) => {
 const deleteUserById = async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id);
-    if (!user) return res.status(404).json({ message: "No user found [user controller]" });
+    if (!user)
+      return res
+        .status(404)
+        .json({ message: "No user found [user controller]" });
     user.destroy();
     res.status(200).json(user);
   } catch (err) {
@@ -112,6 +157,7 @@ const deleteUserById = async (req, res) => {
 
 module.exports = {
   getUsers,
+  getContactedUsers,
   getUserById,
   updateUserById,
   deleteUserById,

@@ -9,9 +9,11 @@ const passport = require("passport");
 const socketio = require("socket.io");
 const swaggerUi = require("swagger-ui-express");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
+
 // Import routes and database models
-const authRouter = require( "./app/routes/auth.routes" );
-const usersRouter = require("./app/routes/users.routes")
+const authRouter = require("./app/routes/auth.routes");
+const usersRouter = require("./app/routes/users.routes");
 const db = require("./app/models");
 const setupSocket = require("./app/socketio/socket.io");
 // Create a new Express app instance
@@ -40,8 +42,10 @@ app.use(
 // Set up Passport.js middleware for authentication
 require("./app/utils/passport");
 app.use(passport.initialize());
-app.use( passport.session() );
+app.use(passport.session());
 
+// parse cookies
+app.use(cookieParser());
 // Set up Swagger documentation
 const swaggerDocument = require("./app/helper/swaggerDocument");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
