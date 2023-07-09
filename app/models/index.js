@@ -18,9 +18,15 @@ db.sequelize = sequelize;
 db.user = require("./user.model.js")(sequelize, Sequelize);
 db.user_logins = require("./user_logins.js")(sequelize, Sequelize);
 db.message = require("./message.js")(sequelize,Sequelize);
+db.conversation = require("./conversation.model.js")(sequelize,Sequelize)
 // ==========================
 // relationships db.user <=> db.message
 db.message.belongsTo(db.user, { as: "sender" });
 db.message.belongsTo(db.user, { as: "recipient" });
-
+// 
+db.user.hasMany(db.conversation);
+db.conversation.belongsTo(db.user, { as: 'user1' });
+db.conversation.belongsTo(db.user, { as: 'user2' });
+db.conversation.hasMany(db.message);
+db.message.belongsTo(db.conversation);
 module.exports = db;
