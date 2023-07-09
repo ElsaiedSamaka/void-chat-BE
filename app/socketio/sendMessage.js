@@ -13,7 +13,6 @@ const sendMessage = async (socket, io, data) => {
   const newMessage = await Message.findByPk(message.id, {
     include: { all: true },
   });
-
   // find the socketId of the user on recipientId and this will be our to()
   const recipient = await User.findByPk(message.recipientId);
   // find the socketId of the user on recipientId and this will be our to()
