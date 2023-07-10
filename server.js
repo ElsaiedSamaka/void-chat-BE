@@ -14,6 +14,7 @@ const cookieParser = require("cookie-parser");
 // Import routes and database models
 const authRouter = require("./app/routes/auth.routes");
 const usersRouter = require("./app/routes/users.routes");
+const conversationRouter = require("./app/routes/conversation.routes")
 const db = require("./app/models");
 const setupSocket = require("./app/socketio/socket.io");
 // Create a new Express app instance
@@ -88,6 +89,7 @@ app.get("/", (req, res) => {
 // Set up routes for handling authentication
 app.use( "/api/auth", authRouter );
 app.use("/api/users",usersRouter)
+app.use("/api/conversation",conversationRouter)
 
 // Define the port to listen on
 const PORT = process.env.NODE_APP_PORT || 3000;

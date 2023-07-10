@@ -5,7 +5,7 @@ const { checkUser } = require("../middleware");
 // Get List of conversation
 router.get("/", [checkUser.getCurrentUser], conversationController.getConversations);
 // Create conversation
-router.post("/",conversationController.createConversation)
+router.post("/",[checkUser.getCurrentUser], conversationController.createConversation)
 // get conversation
 router.get(":id",conversationController.getConversation)
 

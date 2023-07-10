@@ -29,11 +29,15 @@ const getConversations = async (req, res) => {
   };
 
   const createConversation = async (req, res) => {
+  const id = req.userId;
     try {
-     const conversation = await  Conversation.create({
-         user1_id: req.body.user1_id,
-         user2_id: req.body.user2_id
-       })  
+      const conversation = await Conversation.findOrCreate({
+        where: {
+          userId: id,
+          user1id: req.body.user1id,
+          user2id: req.body.user2id
+        }
+      }); 
        if(!conversation) 
        return res.status(404).json({ message: "No conversation found" })
        res.status(200).json(conversation)
