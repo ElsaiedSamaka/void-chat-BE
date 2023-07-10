@@ -13,12 +13,7 @@ function setupSocket(server) {
   io.on("connection", (socket) => {
     console.log(`Socket.IO client ${socket.id} connected`);
 
-    // Extract the user ID from the query parameter
-    const socketId = socket.handshake.query.socketId;
-    console.log("socketId", socketId);
-
-    // Join the room corresponding to the user ID
-    socket.join(socketId);
+    socket.join(socket.id);
 
     // get current user
     getConnectedUser(socket);
