@@ -17,16 +17,13 @@ const sendMessage = async (socket, io, data) => {
   const newMessage = await Message.findByPk(message.id, {
     include: { all: true },
   });
-
   
-
   // Send the message to each recipient
-  recipients.forEach((recipient) => {
-    // Associate the recipients with the message instance
-     newMessage.setRecipient(recipient.id);
-    io.to(recipient.socketId).emit('newMessage', newMessage);
-  });
-
+  for (const recipient of recipients){
+     // Associate the recipients with the message instance
+   await newMessage.setRecipient(recipient.id);
+   io.to(recipient.socketId).emit('newMessage', newMessage);
+  }
   // Send the message to the sender as well
   io.to(sender.socketId).emit('newMessage', newMessage);
 };
