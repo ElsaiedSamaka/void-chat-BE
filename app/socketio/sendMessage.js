@@ -6,21 +6,29 @@ const User = require("../models").user;
 const sendMessage = async (socket, io, data) => {
   const message = await Message.create({
     senderId: data.sender,
-    recipientId: data.recipient,
     message: data.message,
     createdAt: new Date(),
+  });
+
+  const sender = await User.findByPk(message.senderId);
+  const recipients = await User.findAll({
+    where: { id: data.recipients },
   });
   const newMessage = await Message.findByPk(message.id, {
     include: { all: true },
   });
-  // find the socketId of the user on recipientId and this will be our to()
-  const recipient = await User.findByPk(message.recipientId);
-  // find the socketId of the user on recipientId and this will be our to()
-  const sender = await User.findByPk(message.senderId);
-  // Send the message to the appropriate room
-  io.to(recipient.socketId).emit("newMessage", newMessage);
-  io.to(sender.socketId).emit("newMessage", newMessage);
-  // in client we can handle whatever we want with newMessage event
+
+  
+
+  // Send the message to each recipient
+  recipients.forEach((recipient) => {
+    // Associate the recipients with the message instance
+     newMessage.setRecipient(recipient.id);
+    io.to(recipient.socketId).emit('newMessage', newMessage);
+  });
+
+  // Send the message to the sender as well
+  io.to(sender.socketId).emit('newMessage', newMessage);
 };
 
 module.exports = sendMessage;
