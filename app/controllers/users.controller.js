@@ -43,8 +43,8 @@ const getContactedUsers = async (req, res) => {
     const uniqueRecipients = new Array();
 
     messages.forEach((message) => {
-      const recipientId = message.recipient.id;
-      const senderId = message.sender.id;
+      const recipientId = message.recipientId;
+      const senderId = message.senderId;
       if (recipientId !== id && !uniqueRecipients.includes(recipientId)) {
         uniqueRecipients.push(recipientId);
       }
