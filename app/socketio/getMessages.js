@@ -4,7 +4,6 @@ const Message = require("../models").message;
 
 const getMessages = async (socket, io, payload) => {
   const { sender, recipient } = payload;
-  console.log("sender", sender, "recipient", recipient);
 
   const messages = await Message.findAll({
     where: {

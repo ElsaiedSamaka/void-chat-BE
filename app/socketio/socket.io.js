@@ -12,9 +12,16 @@ function setupSocket(server) {
 
   io.on("connection", (socket) => {
     console.log(`Socket.IO client ${socket.id} connected`);
-
-    socket.join(socket.id);
-
+  
+    socket.on('join', (user) => {
+      console.log("user",user);
+      socket.join(`user:${user.user}`);
+      console.log(`user:${user.user}`);
+    });
+    socket.on('leave', (userId) => {
+      console.log("userId",userId);
+      socket.leave(`user:${userId}`);
+    });
     // get current user
     getConnectedUser(socket);
     // get messages

@@ -23,6 +23,8 @@ db.conversation = require("./conversation.model.js")(sequelize,Sequelize)
 // relationships db.user <=> db.message
 db.message.belongsTo(db.user, { as: "sender" });
 db.message.belongsTo(db.user, { as: "recipient" });
+db.message.belongsToMany(db.user, { through: 'message-recipients', as: 'recipients' });
+db.user.belongsToMany(db.message, { through: 'message-recipients', as: 'receivedMessages' });
 // relationships db.user <=> db.conversation
 db.user.hasMany(db.conversation);
 db.conversation.belongsTo(db.user, { as: 'user1' });
