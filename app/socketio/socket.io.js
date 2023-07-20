@@ -14,12 +14,9 @@ function setupSocket(server) {
     console.log(`Socket.IO client ${socket.id} connected`);
   
     socket.on('join', (user) => {
-      console.log("user",user);
-      socket.join(`user:${user.user}`);
-      console.log(`user:${user.user}`);
+      socket.join(`user:${user.userId}`);
     });
     socket.on('leave', (userId) => {
-      console.log("userId",userId);
       socket.leave(`user:${userId}`);
     });
     // get current user
