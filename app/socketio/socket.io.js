@@ -13,11 +13,12 @@ function setupSocket(server) {
   io.on("connection", (socket) => {
     console.log(`Socket.IO client ${socket.id} connected`);
   
-    socket.on('join', (user) => {
-      socket.join(`user:${user.userId}`);
+    socket.on('join', (payload) => {
+      socket.join(`room:${payload.userId}-${payload.recipientId}`);
+      socket.join(`room:${payload.recipientId}-${payload.userId}`);
     });
-    socket.on('leave', (userId) => {
-      socket.leave(`user:${userId}`);
+    socket.on('leave', (payload) => {
+      socket.leave(`room:${payload.userId}-${payload.recipientId}`);
     });
     // get current user
     getConnectedUser(socket);
