@@ -14,6 +14,7 @@ const sendMessage = async (socket, io, data) => {
   });
   // Create a room name based on the senderId and recipientId
   const roomName = `room:${sender.id}-${recipients[0].id}`;
+  console.log("roomName",roomName);
   for (const recipient of recipients) {
     await message.setRecipient(recipient)
   }
