@@ -12,15 +12,13 @@ const sendMessage = async (socket, io, data) => {
   const recipients = await User.findAll({
     where: { id: data.recipients },
   });
-  // Create a room name based on the senderId and recipientId
-  const roomName = `room:${sender.id}-${recipients[0].id}`;
-  console.log("roomName",roomName);
   for (const recipient of recipients) {
+    const recipientRoomName = `room:${recipient.id}-${data.sender}`;
+    const senderRoomName = `room:${sender.id}-${recipients[0].id}`;
     await message.setRecipient(recipient)
+    const newMessage = await Message.findByPk(message.id, { include: { all: true } });
+    io.to(recipientRoomName,senderRoomName).emit('newMessage', newMessage);
   }
-  // Send the message to the room
-  const newMessage = await Message.findByPk(message.id,{include:{all:true}})
-  io.to(roomName).emit('newMessage', newMessage);
 };
 
 module.exports = sendMessage;

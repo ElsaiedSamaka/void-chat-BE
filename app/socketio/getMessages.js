@@ -22,8 +22,9 @@ const getMessages = async (socket, io, payload) => {
       all: true,
     },
   });
-
-  io.to(socket.id).emit("messages", messages);
+  const recipientRoomName = `room:${recipient}-${sender}`;
+  const senderRoomName = `room:${sender}-${recipient}`;
+  io.to(recipientRoomName,senderRoomName).emit("messages", messages);
 };
 
 module.exports = getMessages;
