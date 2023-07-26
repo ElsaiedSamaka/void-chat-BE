@@ -1,7 +1,8 @@
 const socketio = require("socket.io");
 const getMessages = require( "./getMessages" );
 const sendMessage = require("./sendMessage");
-const getConnectedUser = require("../helper/getConnectedUser")
+const getConnectedUser = require("../helper/getConnectedUser");
+const getContactedUsers = require("./getContacts");
 function setupSocket(server) {
   const io = socketio(server, {
     cors: {
@@ -37,6 +38,12 @@ function setupSocket(server) {
         console.error(`Error sending message: ${error}`);
       });
     });
+    // get contacts
+    socket.on("getContacts",(payload)=>{
+      getContactedUsers(socket, io, payload).catch((error) => {
+        console.error(`Error getting contacts: ${error}`);
+      });
+    })
     // handle disconnecting
     socket.on("disconnect", () => {
       console.log(`Socket.IO client ${socket.id} disconnected`);
