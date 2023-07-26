@@ -17,8 +17,6 @@ function setupSocket(server) {
     socket.on('join', (payload) => {
       socket.join(`room:${payload.userId}-${payload.recipientId}`);
       socket.join(`room:${payload.recipientId}-${payload.userId}`);
-      console.log("room 1",`room:${payload.userId}-${payload.recipientId}`);
-      console.log("room 2",`room:${payload.recipientId}-${payload.userId}`);
     });
     socket.on('leave', (payload) => {
       socket.leave(`room:${payload.userId}-${payload.recipientId}`);

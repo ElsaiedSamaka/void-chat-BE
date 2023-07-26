@@ -42,8 +42,6 @@ const getContactedUsers = async (socket, io, payload) => {
             id: uniqueRecipients,
           },
         });
-        console.log("uniqueUsers",uniqueUsers);
-        console.log("getConnectedUser()",await getConnectedUser(socket));
         io.to(await getConnectedUser(socket)).emit("contacts", uniqueUsers);
       } catch (err) {
         console.log("error while retrieving contacted users",err);

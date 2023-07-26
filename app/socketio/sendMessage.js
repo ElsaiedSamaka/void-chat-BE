@@ -2,7 +2,6 @@ const Message = require("../models").message;
 const User = require("../models").user;
 
 const sendMessage = async (socket, io, data) => {
-  console.log("data",data);
   const message = await Message.create({
     senderId: data.sender,
     message: data.message,
