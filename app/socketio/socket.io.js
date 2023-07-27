@@ -3,6 +3,7 @@ const getMessages = require( "./getMessages" );
 const sendMessage = require("./sendMessage");
 const getConnectedUser = require("../helper/getConnectedUser");
 const getContactedUsers = require("./getContacts");
+const testConnection = require("./testConnection");
 function setupSocket(server) {
   const io = socketio(server, {
     cors: {
@@ -15,11 +16,6 @@ function setupSocket(server) {
     console.log(`Socket.IO client ${socket.id} connected`);
     // get current user
     const userSocketId = await getConnectedUser(socket);
-    socket.on('init',(payload)=>{
-      socket.join(`socketId:${userSocketId}`)
-    })
-    console.info("userSocketId ==========>",userSocketId);
-
     // 2 users connection room 
     socket.on('join', (payload) => {
       socket.join(`room:${payload.userId}-${payload.recipientId}`);
@@ -48,12 +44,11 @@ function setupSocket(server) {
         console.error(`Error getting contacts: ${error}`);
       });
     })
-    // test
+    // test connection
     socket.on("testevent", (payload)=>{
-      console.log("payload",payload);
-      setInterval(() => {
-        socket.to(`socketId:${userSocketId}`).emit("testrespond","hello from server")
-      }, 2000);
+     testConnection(socket, io, payload).catch((error) => {
+      console.error(`Error testing connection: ${error}`);
+    });
     })
     // handle disconnecting
     socket.on("disconnect", () => {
