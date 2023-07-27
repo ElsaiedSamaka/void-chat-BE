@@ -11,9 +11,13 @@ function setupSocket(server) {
     },
   });
 
-  io.on("connection", (socket) => {
+  io.on("connection", async (socket) => {
     console.log(`Socket.IO client ${socket.id} connected`);
-  
+    // get current user
+    const userSocketId = await getConnectedUser(socket);
+    console.info("userSocketId ==========>",userSocketId);
+
+    // 2 users connection room 
     socket.on('join', (payload) => {
       socket.join(`room:${payload.userId}-${payload.recipientId}`);
       socket.join(`room:${payload.recipientId}-${payload.userId}`);
@@ -22,8 +26,7 @@ function setupSocket(server) {
       socket.leave(`room:${payload.userId}-${payload.recipientId}`);
       socket.leave(`room:${payload.recipientId}-${payload.userId}`);
     });
-    // get current user
-    getConnectedUser(socket);
+    
     // get messages
     socket.on("getMessages", (payload) => {
       getMessages(socket, io, payload).catch((error) => {
@@ -41,6 +44,11 @@ function setupSocket(server) {
       getContactedUsers(socket, io, payload).catch((error) => {
         console.error(`Error getting contacts: ${error}`);
       });
+    })
+    // test
+    socket.on("testevent", (payload)=>{
+      console.log("payload",payload);
+        socket.emit("testrespond","hello from server")
     })
     // handle disconnecting
     socket.on("disconnect", () => {
