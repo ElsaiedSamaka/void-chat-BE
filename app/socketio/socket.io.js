@@ -15,6 +15,9 @@ function setupSocket(server) {
     console.log(`Socket.IO client ${socket.id} connected`);
     // get current user
     const userSocketId = await getConnectedUser(socket);
+    socket.on('init',(payload)=>{
+      socket.join(`socketId:${userSocketId}`)
+    })
     console.info("userSocketId ==========>",userSocketId);
 
     // 2 users connection room 
@@ -48,7 +51,9 @@ function setupSocket(server) {
     // test
     socket.on("testevent", (payload)=>{
       console.log("payload",payload);
-        socket.emit("testrespond","hello from server")
+      setInterval(() => {
+        socket.to(`socketId:${userSocketId}`).emit("testrespond","hello from server")
+      }, 2000);
     })
     // handle disconnecting
     socket.on("disconnect", () => {

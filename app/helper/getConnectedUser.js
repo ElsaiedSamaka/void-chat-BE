@@ -11,6 +11,7 @@ try {
 
   // Get the user ID from the token and save the socket ID to the User model
   const token = socket.handshake.query.token;
+  console.log("token",token);
   const decodedToken = jwt.verify(token, config.secret);
   const userId = decodedToken.id;
 
