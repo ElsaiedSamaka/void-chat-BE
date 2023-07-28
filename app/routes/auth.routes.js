@@ -15,7 +15,7 @@ router.post(
   ],
   authController.signup
 );
-router.post("/signin", [checkUser.isActive], authController.signin);
+router.post("/signin", authController.signin);
 router.post("/signout", authController.signout);
 router.get( "/signedin", [ checkUser.getCurrentUser ], authController.signedin );
 module.exports = router

@@ -5,11 +5,12 @@ const User = require("../models").user;
 const Message = require("../models").message;
 
 const getContactedUsers = async (socket, io, payload) => {
-    const {userId} = payload;
+    const {user} = payload;
+    console.log("payload",payload);
     try {
         const messages = await Message.findAll({
           where: {
-            [Op.or]: [{ senderId: userId }, { recipientId: userId }],
+            [Op.or]: [{ senderId: user.id }, { recipientId: user.id }],
           },
           include: [
             {
@@ -29,10 +30,10 @@ const getContactedUsers = async (socket, io, payload) => {
         messages.forEach((message) => {
           const recipientId = message.recipientId;
           const senderId = message.senderId;
-          if (recipientId !== userId && !uniqueRecipients.includes(recipientId)) {
+          if (recipientId !== user.id  && !uniqueRecipients.includes(recipientId)) {
             uniqueRecipients.push(recipientId);
           }
-          if (senderId !== userId && !uniqueRecipients.includes(senderId)) {
+          if (senderId !==user.id  && !uniqueRecipients.includes(senderId)) {
             uniqueRecipients.push(senderId);
           }
         });
@@ -42,7 +43,7 @@ const getContactedUsers = async (socket, io, payload) => {
             id: uniqueRecipients,
           },
         });
-        io.to(await getConnectedUser(socket)).emit("contacts", uniqueUsers);
+        io.to(socket.id).emit("contacts", uniqueUsers);
       } catch (err) {
         console.log("error while retrieving contacted users",err);
       }
