@@ -4,6 +4,8 @@ const Message = require("../models").message;
 
 const getMessages = async (socket, io, payload) => {
   const { sender, recipient } = payload;
+  console.log("sender",sender);
+  console.log("recipient",recipient);
 
   const messages = await Message.findAll({
     where: {
@@ -24,7 +26,7 @@ const getMessages = async (socket, io, payload) => {
   });
   const recipientRoomName = `room:${recipient}-${sender}`;
   const senderRoomName = `room:${sender}-${recipient}`;
-  io.to(recipientRoomName,senderRoomName).emit("messages", messages);
+  io.to(socket.id).emit("messages", messages);
 };
 
 module.exports = getMessages;

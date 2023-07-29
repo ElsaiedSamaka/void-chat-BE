@@ -18,7 +18,6 @@ try {
   if (!user) {
     throw new Error(`User with ID ${userId} not found`);
   }
-  console.log("getConnectedUser",socket.id);
   user.socketId = socket.id;
   await user.save();
   return socket.id;

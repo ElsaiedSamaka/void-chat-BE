@@ -5,7 +5,6 @@ const User = require("../models").user;
 const Message = require("../models").message;
 
 const getContactedUsers = async (socket, io, payload) => {
-  console.log("payload",payload);
     const {user} = payload;
     try {
         const messages = await Message.findAll({

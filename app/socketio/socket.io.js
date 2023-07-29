@@ -16,7 +16,6 @@ function setupSocket(server) {
     console.log(`Socket.IO client ${socket.id} connected`);
     // get current user
     const userSocketId = await getConnectedUser(socket);
-    console.log("userSocketId",userSocketId);
     // 2 users connection room 
     socket.on('join', (payload) => {
       socket.join(`room:${payload.userId}-${payload.recipientId}`);
@@ -46,11 +45,11 @@ function setupSocket(server) {
       });
     })
     // test connection
-    socket.on("testevent", (payload)=>{
-     testConnection(socket, io, payload).catch((error) => {
-      console.error(`Error testing connection: ${error}`);
-    });
-    })
+    // socket.on("testevent", (payload)=>{
+    //  testConnection(socket, io, payload).catch((error) => {
+    //   console.error(`Error testing connection: ${error}`);
+    // });
+    // })
     // handle disconnecting
     socket.on("disconnect", () => {
       console.log(`Socket.IO client ${socket.id} disconnected`);
