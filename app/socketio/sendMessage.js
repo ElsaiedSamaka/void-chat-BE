@@ -14,7 +14,7 @@ const sendMessage = async (socket, io, data) => {
   });
   for (const recipient of recipients) {
     const recipientRoomName = `room:${recipient.id}-${data.sender}`;
-    const senderRoomName = `room:${sender.id}-${recipients[0].id}`;
+    const senderRoomName = `room:${sender.id}-${recipient.id}`;
     await message.setRecipient(recipient)
     const newMessage = await Message.findByPk(message.id, { include: { all: true } });
     io.to(recipientRoomName,senderRoomName).emit('newMessage', newMessage);

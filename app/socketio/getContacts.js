@@ -5,8 +5,8 @@ const User = require("../models").user;
 const Message = require("../models").message;
 
 const getContactedUsers = async (socket, io, payload) => {
+  console.log("payload",payload);
     const {user} = payload;
-    console.log("payload",payload);
     try {
         const messages = await Message.findAll({
           where: {
@@ -43,7 +43,7 @@ const getContactedUsers = async (socket, io, payload) => {
             id: uniqueRecipients,
           },
         });
-        io.to(socket.id).emit("contacts", uniqueUsers);
+        io.to(socket.id || user.socketId).emit("contacts", uniqueUsers);
       } catch (err) {
         console.log("error while retrieving contacted users",err);
       }

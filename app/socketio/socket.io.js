@@ -16,6 +16,7 @@ function setupSocket(server) {
     console.log(`Socket.IO client ${socket.id} connected`);
     // get current user
     const userSocketId = await getConnectedUser(socket);
+    console.log("userSocketId",userSocketId);
     // 2 users connection room 
     socket.on('join', (payload) => {
       socket.join(`room:${payload.userId}-${payload.recipientId}`);
